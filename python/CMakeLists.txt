@@ -42,11 +42,22 @@ endif(GRCC_EXEC)
 # For each GRC file, execute grcc and place the result in the build
 # directory. Also creates a list "grc_py_name" that stores the full
 # file names of all of the pre-built python files.
+set(inc 0)
 foreach(f ${grc_files})
-  message(STATUS "Processing File: ${f}")
-  execute_process(COMMAND ${GRCC_EXEC} ${f} -d ${CMAKE_BINARY_DIR}/python)
+  message(STATUS "Preparing: ${f}")
   string(REPLACE ".grc" ".py" tmp_name ${f})
   string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}" grc_py_name ${tmp_name})
+
+  # Create a new command to use grcc to compile the .grc to .py file
+  add_custom_command(OUTPUT ${grc_py_name}
+    COMMAND ${GRCC_EXEC} ${f} -d ${CMAKE_BINARY_DIR}/python
+    DEPENDS ${f})
+
+  # Create a new target to run the previous command.  Use the inc
+  # variable to make sure we have a different target name each time.
+  add_custom_target(target_py_${inc} DEPENDS ${grc_py_name})
+  MATH(EXPR inc "${inc}+1")
+
   list(APPEND py_files "${grc_py_name}")
 endforeach(f ${grc_files})
 
