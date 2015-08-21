@@ -1,0 +1,13 @@
+This project aims to collect the simplest possible examples of running
+all GNU Radio blocks. Each example should focus on running a single
+block with just the required inputs to run it and output GUI elements
+to see the response as well as tunable variables for any parameters of
+the block.
+
+The intent of this project is that you build and install it as any
+other project. The make process will run grcc on each of the .grc
+files and install the produced Python files as examples. The GRC files
+themselves may be used by themselves as well.
+
+The make process is currently not working as we work out some issues
+with grcc and certain designs.
